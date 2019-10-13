@@ -82,10 +82,14 @@ namespace EVP.WebToPay.ClientAPI
         public static bool VerifySS2(string data, byte[] signature, byte[] publicKeyRawData)
         {
             X509Certificate2 c = new X509Certificate2(publicKeyRawData);
-            RSACryptoServiceProvider p = new RSACryptoServiceProvider();
-            p.FromXmlString(c.PublicKey.Key.ToXmlString(false));
-            bool valid = p.VerifyData(System.Text.Encoding.UTF8.GetBytes(data), CryptoConfig.MapNameToOID("SHA1"), signature);
-            return valid;
+            using (RSA rsa = c.GetRSAPublicKey())
+            {
+                bool valid = rsa.VerifyData(System.Text.Encoding.UTF8.GetBytes(data),
+                    signature,
+                    HashAlgorithmName.SHA1,
+                    RSASignaturePadding.Pss);
+                return valid;
+            }
         }
 
 
