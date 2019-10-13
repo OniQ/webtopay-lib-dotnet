@@ -87,7 +87,7 @@ namespace EVP.WebToPay.ClientAPI
                 bool valid = rsa.VerifyData(System.Text.Encoding.UTF8.GetBytes(data),
                     signature,
                     HashAlgorithmName.SHA1,
-                    RSASignaturePadding.Pss);
+                    RSASignaturePadding.Pkcs1);
                 return valid;
             }
         }
